@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Timbit</title>
+<style>
+:root{--bg:#fff;--fg:#1f2937;--muted:#6b7280;--accent:#14B8A6;--line:#e5e7eb;--card:#f9fafb}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0f14;--fg:#e5e7eb;--muted:#9ca3af;--line:#1f2937;--card:#111827}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","PingFang TC","Hiragino Sans","Noto Sans CJK SC","Noto Sans CJK TC","Noto Sans CJK JP",sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:24px 20px 64px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:28px}
+.brand{font-weight:800;font-size:22px;color:var(--accent);letter-spacing:.2px;text-decoration:none}
+.langs{display:flex;flex-wrap:wrap;gap:6px}
+.langs button{font:inherit;font-size:14px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+.langs button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+h1{font-size:30px;line-height:1.25;margin:0 0 4px}
+h2{font-size:19px;margin:30px 0 6px}
+.updated{color:var(--muted);font-size:14px;margin:0 0 20px}
+p{margin:8px 0}ul{margin:8px 0;padding-left:22px}li{margin:4px 0}
+a{color:var(--accent)}
+.lang{display:none}
+.tag{color:var(--muted);margin:6px 0 28px;font-size:18px}
+.links a{display:block;padding:14px 16px;margin:10px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--fg);font-weight:600}
+.links a:hover{border-color:var(--accent)}
+footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+<noscript><style>.lang{display:block!important;border-bottom:1px solid #ccc;margin-bottom:32px}</style></noscript>
+</head><body><div class="wrap">
+<div class="top"><a class="brand" href="./#">Timbit</a><nav class="langs" aria-label="Language"><button type="button" data-l="en" aria-current="false">English</button><button type="button" data-l="zh-Hans" aria-current="false">简体中文</button><button type="button" data-l="zh-Hant" aria-current="false">繁體中文</button><button type="button" data-l="ja" aria-current="false">日本語</button></nav></div>
+<main>
+<section class="lang" lang="en"><h1>Timbit</h1><p class="tag">A new way to remember life</p><div class="links"><a data-page="privacy.html" href="privacy.html#en">Privacy Policy</a><a data-page="terms.html" href="terms.html#en">Terms of Use</a></div></section>
+<section class="lang" lang="zh-Hans"><h1>Timbit</h1><p class="tag">A new way to remember life</p><div class="links"><a data-page="privacy.html" href="privacy.html#zh-Hans">隐私政策</a><a data-page="terms.html" href="terms.html#zh-Hans">服务条款</a></div></section>
+<section class="lang" lang="zh-Hant"><h1>Timbit</h1><p class="tag">A new way to remember life</p><div class="links"><a data-page="privacy.html" href="privacy.html#zh-Hant">隱私權政策</a><a data-page="terms.html" href="terms.html#zh-Hant">服務條款</a></div></section>
+<section class="lang" lang="ja"><h1>Timbit</h1><p class="tag">A new way to remember life</p><div class="links"><a data-page="privacy.html" href="privacy.html#ja">プライバシーポリシー</a><a data-page="terms.html" href="terms.html#ja">利用規約</a></div></section>
+</main>
+<footer>© 2026 Timbit · <a href="mailto:spacetrier@outlook.com">spacetrier@outlook.com</a></footer>
+</div>
+<script>
+(function(){
+var LANGS=['en','zh-Hans','zh-Hant','ja'];
+var TITLES={"en": "Timbit", "zh-Hans": "Timbit", "zh-Hant": "Timbit", "ja": "Timbit"};
+function pick(){
+  var q=new URLSearchParams(location.search).get('lang');
+  var h=location.hash.replace('#','');
+  var c=q||h;
+  if(LANGS.indexOf(c)>=0)return c;
+  var n=(navigator.language||'en').toLowerCase();
+  if(n.indexOf('ja')===0)return 'ja';
+  if(n.indexOf('zh')===0)return /hant|tw|hk|mo/.test(n)?'zh-Hant':'zh-Hans';
+  return 'en';
+}
+function apply(l,push){
+  document.documentElement.lang=l;
+  document.title=TITLES[l];
+  var s=document.querySelectorAll('.lang');
+  for(var i=0;i<s.length;i++){s[i].style.display=(s[i].getAttribute('lang')===l)?'block':'none';}
+  var b=document.querySelectorAll('.langs button');
+  for(var j=0;j<b.length;j++){b[j].setAttribute('aria-current',b[j].getAttribute('data-l')===l?'true':'false');}
+  var a=document.querySelectorAll('a[data-page]');
+  for(var k=0;k<a.length;k++){a[k].setAttribute('href',a[k].getAttribute('data-page')+'#'+l);}
+  if(push&&history.replaceState){history.replaceState(null,'',location.pathname+location.search.replace(/([?&])lang=[^&]*&?/,'$1').replace(/[?&]$/,'')+'#'+l);}
+}
+var cur=pick();
+document.addEventListener('DOMContentLoaded',function(){
+  var b=document.querySelectorAll('.langs button');
+  for(var i=0;i<b.length;i++){b[i].addEventListener('click',function(){apply(this.getAttribute('data-l'),true);});}
+  apply(cur,false);
+});
+window.addEventListener('hashchange',function(){var h=location.hash.replace('#','');if(LANGS.indexOf(h)>=0)apply(h,false);});
+})();
+</script>
+</body></html>
